@@ -1,0 +1,85 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --main-width: min(max(100vw, 250px), 500px);
+  --main-height: min(max(100vh, 600px), 1000px);
+  --display-height: calc(0.3 * var(--main-height));
+  --keyboard-height: calc(var(--main-height) - var(--display-height));
+  --keyboard-padding-size: 10px;
+  --gap-size: 10px;
+  --button-font: 50px;
+  --input-initial-font: 100px;
+}
+
+:root {
+  --button-width: calc(
+    (var(--main-width) - 3 * var(--gap-size) - 2 * var(--keyboard-padding-size)) /
+      4
+  );
+  --button-height: calc(
+    (
+        var(--keyboard-height) - 4 * var(--gap-size) - 2 *
+          var(--keyboard-padding-size)
+      ) / 5
+  );
+  --input-height: var(--display-height);
+  --input-font: var(--input-initial-font);
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+}
+
+.light {
+  --button-color1: red;
+}
+
+#display {
+  width: var(--main-width);
+  height: var(--display-height);
+  background-color: black;
+}
+
+#input {
+  background-color: aquamarine;
+  width: var(--main-width);
+  height: var(--input-height);
+  font-size: var(--input-font);
+
+  resize: none;
+  overflow: hidden;
+  /* overflow: hidden; */
+}
+
+#keyboard {
+  width: var(--main-width);
+  height: var(--keyboard-height);
+  padding: var(--keyboard-padding-size);
+  background: blue;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  place-items: center;
+  justify-content: stretch;
+  gap: var(--gap-size);
+}
+
+.button {
+  width: var(--button-width);
+  height: var(--button-height);
+  background-color: var(--button-color1);
+  border-radius: 10%;
+  text-align: center;
+  line-height: var(--button-size);
+  font-size: var(--button-font);
+}
