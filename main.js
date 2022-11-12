@@ -1,50 +1,58 @@
+const body = document.getElementsByTagName("body")[0];
 const keyboard = document.getElementById("keyboard");
 const input = document.getElementById("input");
 
 const mainStyle = document.documentElement.style;
-console.log(keyboard);
 // mainStyle.setProperty("--button-font", "50px");
 
 let cursorPos = 0;
 
-const init = () => {
-  const keys = [
-    { text: "AC", onClickEvent: "clearAll()" },
-    "(",
-    ")",
-    "/",
-    7,
-    8,
-    9,
-    "*",
-    4,
-    5,
-    6,
-    "+",
-    1,
-    2,
-    3,
-    "-",
-    0,
-    { text: "<==", onClickEvent: "clearBack()" },
-    ".",
-    { text: "=", onClickEvent: "evaluate()" },
-  ];
+const keys = [
+  { text: "C", onClickEvent: "clearAll" },
+  { text: "(", onClickEvent: "typeIt" },
+  { text: ")", onClickEvent: "typeIt" },
+  { text: "/", onClickEvent: "typeIt" },
+  { text: "7", onClickEvent: "typeIt" },
+  { text: "8", onClickEvent: "typeIt" },
+  { text: "9", onClickEvent: "typeIt" },
+  { text: "*", onClickEvent: "typeIt" },
+  { text: "4", onClickEvent: "typeIt" },
+  { text: "5", onClickEvent: "typeIt" },
+  { text: "6", onClickEvent: "typeIt" },
+  { text: "+", onClickEvent: "typeIt" },
+  { text: "1", onClickEvent: "typeIt" },
+  { text: "2", onClickEvent: "typeIt" },
+  { text: "3", onClickEvent: "typeIt" },
+  { text: "-", onClickEvent: "typeIt" },
+  { text: "0", onClickEvent: "typeIt" },
+  { text: "<", onClickEvent: "clearBack" },
+  { text: ".", onClickEvent: "typeIt" },
+  { text: "=", onClickEvent: "calculate" },
+];
 
+const keyTexts = keys
+  .filter(key => key.onClickEvent == "typeIt")
+  .map(({ text }) => text);
+
+const init = () => {
   let button_id = 0;
   keys.forEach(key => {
     const newButton = document.createElement("button");
     newButton.setAttribute("button_id", button_id++);
     newButton.classList.add("button");
-    const text = key.text || key;
-    newButton.innerText = text;
-    newButton.setAttribute("onclick", key.onClickEvent || `typeIt("${text}")`);
+    newButton.innerText = key.text;
+    newButton.setAttribute("onclick", key.onClickEvent + `("${key.text}")`);
     keyboard.appendChild(newButton);
   });
+
+  body.addEventListener("keydown", keyPressedEvent);
+  input.addEventListener("click", inputClickEvent);
 };
 
 const checkIfActive = () => {
+  console.log(cursorPos);
   if (cursorPos === input.value.length) {
+    input.blur();
     return;
   }
   input.selectionStart = cursorPos;
@@ -66,7 +74,7 @@ const deleteSelected = () => {
 };
 
 const clearAll = () => {
-  input.value = "";
+  input.value = "0";
   cursorPos = 0;
 };
 
@@ -91,12 +99,51 @@ const typeIt = c => {
   checkInput();
 };
 
-const evaluate = () => {
+const calculate = () => {
   console.log("= was pressed!");
 };
 
 const checkInput = () => {
   checkIfActive();
+};
+
+const keyPressedEvent = e => {
+  e.preventDefault();
+  const key = e.key;
+  if (keyTexts.includes(key)) {
+    typeIt(key);
+  } else {
+    switch (key) {
+      case "Escape":
+        clearAll();
+        break;
+      case "Backspace":
+        clearBack();
+        break;
+      case "=":
+        calculate();
+        break;
+      case "ArrowRight":
+        if (cursorPos < input.value.length) {
+          cursorPos++;
+          input.selectionStart = cursorPos;
+        }
+        break;
+      case "ArrowLeft":
+        if (cursorPos > 0) {
+          cursorPos--;
+          input.selectionEnd = cursorPos;
+        }
+        break;
+      default:
+        console.log(e);
+        break;
+    }
+  }
+};
+
+const inputClickEvent = () => {
+  cursorPos = input.selectionStart;
 };
 
 init();
