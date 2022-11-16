@@ -53,6 +53,7 @@ const checkIfActive = () => {
   console.log(cursorPos);
   if (cursorPos === input.value.length) {
     input.blur();
+    input.scrollTop = input.scrollHeight;
     return;
   }
   input.selectionStart = cursorPos;
@@ -74,14 +75,14 @@ const deleteSelected = () => {
 };
 
 const clearAll = () => {
-  input.value = "0";
+  input.value = "";
   cursorPos = 0;
 };
 
 const clearBack = () => {
   if (isTextSelected()) {
     deleteSelected();
-  } else {
+  } else if (cursorPos > 0) {
     input.value =
       input.value.slice(0, cursorPos - 1) + input.value.slice(cursorPos);
     cursorPos--;
@@ -133,6 +134,7 @@ const keyPressedEvent = e => {
         if (cursorPos > 0) {
           cursorPos--;
           input.selectionEnd = cursorPos;
+          input.focus();
         }
         break;
       default:
