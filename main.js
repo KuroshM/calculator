@@ -50,7 +50,6 @@ const init = () => {
 };
 
 const checkIfActive = () => {
-  console.log(cursorPos);
   if (cursorPos === input.value.length) {
     input.blur();
     input.scrollTop = input.scrollHeight;

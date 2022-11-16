@@ -10,6 +10,7 @@
   --display-height: calc(0.3 * var(--main-height));
   --keyboard-height: calc(var(--main-height) - var(--display-height));
   --keyboard-padding-size: 10px;
+  --input-padding-size: 10px;
   --gap-size: 10px;
   --button-font: 50px;
   --input-initial-font: 100px;
@@ -55,6 +56,7 @@ body {
   background-color: aquamarine;
   width: var(--main-width);
   height: var(--input-height);
+  padding: var(--input-padding-size);
   font-size: var(--input-font);
 
   resize: none;
