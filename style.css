@@ -13,7 +13,8 @@
   --input-padding-size: 10px;
   --gap-size: 10px;
   --button-font: 50px;
-  --input-initial-font: 100px;
+  --input-max-font: 100px;
+  --input-min-font: 30px;
 }
 
 :root {
@@ -28,7 +29,7 @@
       ) / 5
   );
   --input-height: var(--display-height);
-  --input-font: var(--input-initial-font);
+  --input-font: var(--input-max-font);
 }
 
 .center {

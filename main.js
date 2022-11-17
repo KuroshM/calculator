@@ -76,6 +76,7 @@ const deleteSelected = () => {
 const clearAll = () => {
   input.value = "";
   cursorPos = 0;
+  input.blur();
 };
 
 const clearBack = () => {
@@ -100,11 +101,14 @@ const typeIt = c => {
 };
 
 const calculate = () => {
+  resizeInputText();
+
   console.log("= was pressed!");
 };
 
 const checkInput = () => {
   checkIfActive();
+  resizeInputText();
 };
 
 const keyPressedEvent = e => {
@@ -143,8 +147,48 @@ const keyPressedEvent = e => {
   }
 };
 
+const getTextWidth = (text, font) => {
+  dummy = document.createElement("div");
+  document.body.appendChild(dummy);
+
+  dummy.style.font = font;
+  dummy.style.height = "auto";
+  dummy.style.width = "auto";
+  dummy.style.position = "absolute";
+  dummy.style.whiteSpace = "no-wrap";
+  dummy.innerHTML = text;
+
+  width = Math.ceil(dummy.clientWidth);
+  document.body.removeChild(dummy);
+  return width;
+};
+
 const inputClickEvent = () => {
   cursorPos = input.selectionStart;
+};
+
+const getPropValue = (elem, prop) => {
+  return getComputedStyle(elem).getPropertyValue(prop);
+};
+
+const getPropValueInt = (elem, prop) => {
+  return parseInt(getPropValue(elem, prop));
+};
+
+const resizeInputText = () => {
+  const textWidth = getTextWidth(input.value, getPropValue(input, "font"));
+
+  const currentFontSize = getPropValueInt(input, "font-size");
+  const currentPadding = getPropValueInt(input, "padding");
+  const currentWidth = input.clientWidth - 2 * currentPadding;
+  let newFontSize = Math.floor((currentFontSize * currentWidth) / textWidth);
+
+  const root = document.documentElement;
+  const maxFontSize = getPropValueInt(root, "--input-max-font");
+  const minFontSize = getPropValueInt(root, "--input-min-font");
+  newFontSize = Math.min(maxFontSize, Math.max(newFontSize, minFontSize));
+
+  root.style.setProperty("--input-font", "" + newFontSize + "px");
 };
 
 init();
