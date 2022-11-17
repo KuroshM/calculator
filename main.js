@@ -30,6 +30,12 @@ const keys = [
   { text: "=", onClickEvent: "calculate" },
 ];
 
+const isMobile = () => {
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
+};
+
 const keyTexts = keys
   .filter(key => key.onClickEvent == "typeIt")
   .map(({ text }) => text);
@@ -44,6 +50,10 @@ const init = () => {
     newButton.setAttribute("onclick", key.onClickEvent + `("${key.text}")`);
     keyboard.appendChild(newButton);
   });
+
+  if (isMobile) {
+    input.setAttribute("readonly", "readonly");
+  }
 
   body.addEventListener("keydown", keyPressedEvent);
   input.addEventListener("click", inputClickEvent);
@@ -164,7 +174,9 @@ const getTextWidth = (text, font) => {
 };
 
 const inputClickEvent = () => {
-  cursorPos = input.selectionStart;
+  if (!isMobile) {
+    cursorPos = input.selectionStart;
+  }
 };
 
 const getPropValue = (elem, prop) => {
