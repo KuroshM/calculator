@@ -51,12 +51,13 @@ const init = () => {
     keyboard.appendChild(newButton);
   });
 
-  if (isMobile) {
+  if (isMobile()) {
     input.setAttribute("readonly", "readonly");
   }
 
   body.addEventListener("keydown", keyPressedEvent);
   input.addEventListener("click", inputClickEvent);
+  window.addEventListener("resize", resizeInputText);
 };
 
 const checkIfActive = () => {
@@ -168,7 +169,7 @@ const getTextWidth = (text, font) => {
   dummy.style.whiteSpace = "no-wrap";
   dummy.innerHTML = text;
 
-  width = Math.ceil(dummy.clientWidth);
+  width = dummy.clientWidth;
   document.body.removeChild(dummy);
   return width;
 };
@@ -193,8 +194,7 @@ const resizeInputText = () => {
   const currentFontSize = getPropValueInt(input, "font-size");
   const currentPadding = getPropValueInt(input, "padding");
   const currentWidth = input.clientWidth - 2 * currentPadding;
-  let newFontSize = Math.floor((currentFontSize * currentWidth) / textWidth);
-
+  let newFontSize = (currentFontSize * currentWidth * 0.95) / textWidth;
   const root = document.documentElement;
   const maxFontSize = getPropValueInt(root, "--input-max-font");
   const minFontSize = getPropValueInt(root, "--input-min-font");
