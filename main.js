@@ -76,7 +76,7 @@ const isTextSelected = () => {
 };
 
 const deleteSelected = () => {
-  if (isTextSelected) {
+  if (!isMobile() && isTextSelected) {
     cursorPos = input.selectionStart;
     input.value =
       input.value.slice(0, input.selectionStart) +
