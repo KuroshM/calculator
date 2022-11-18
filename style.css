@@ -38,14 +38,10 @@
   align-items: center;
 }
 
-html {
-  height: -webkit-fill-available;
-}
-
 body {
   width: 100vw;
   height: 100vh;
-  height: -webkit-fill-available;
+  /* height: -webkit-fill-available; */
 }
 
 .light {
