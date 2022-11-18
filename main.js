@@ -175,7 +175,7 @@ const getTextWidth = (text, font) => {
 };
 
 const inputClickEvent = () => {
-  if (!isMobile) {
+  if (!isMobile()) {
     cursorPos = input.selectionStart;
   }
 };
