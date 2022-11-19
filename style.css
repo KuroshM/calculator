@@ -6,30 +6,35 @@
 
 :root {
   --main-width: min(max(100vw, 250px), 500px);
-  --main-height: min(max(100vh, 600px), 1000px);
-  --display-height: calc(0.3 * var(--main-height));
-  --keyboard-height: calc(var(--main-height) - var(--display-height));
-  --keyboard-padding-size: 10px;
+  --main-height: min(max(100vh, 250px), 1000px);
+  --screen-height: calc(0.3 * var(--main-height));
+  --keyboard-height: calc(
+    var(--main-height) - var(--screen-height) - var(--gap-size) -
+      var(--padding-size) * 2
+  );
   --input-padding-size: 10px;
   --gap-size: 10px;
+  --padding-size: 10px;
   --button-font: 50px;
   --input-max-font: 100px;
   --input-min-font: 30px;
+  --output-height: 20%;
 }
 
 :root {
   --button-width: calc(
-    (var(--main-width) - 3 * var(--gap-size) - 2 * var(--keyboard-padding-size)) /
-      4
+    (var(--main-width) - 3 * var(--gap-size) - 2 * var(--padding-size)) / 4
   );
-  --button-height: calc(
-    (
-        var(--keyboard-height) - 4 * var(--gap-size) - 2 *
-          var(--keyboard-padding-size)
-      ) / 5
-  );
-  --input-height: var(--display-height);
+  --button-height: calc((var(--keyboard-height) - 4 * var(--gap-size)) / 5);
   --input-font: var(--input-max-font);
+}
+
+.light {
+  --main-color: rgb(72, 97, 145);
+  --scr-color: rgb(89, 178, 148);
+  --btn-color1: rgb(24, 171, 171);
+  --btn-color2: rgb(63, 145, 145);
+  --btn-color3: rgb(133, 184, 166);
 }
 
 .center {
@@ -44,45 +49,122 @@ body {
   /* height: -webkit-fill-available; */
 }
 
-.light {
-  --button-color1: red;
+#main {
+  background-color: var(--main-color);
+  width: var(--main-width);
+  height: var(--main-height);
+  display: grid;
+  /* justify-content: stretch; */
+  grid-template-columns:
+    var(--padding-size) repeat(3, var(--button-width) var(--gap-size)) var(
+      --button-width
+    )
+    var(--padding-size);
+  grid-template-rows:
+    var(--padding-size) var(--screen-height) repeat(
+      5,
+      var(--gap-size) var(--button-height)
+    )
+    var(--padding-size);
+  grid-template-areas:
+    " .   .       .       .       .       .       .       .         . "
+    " .   screen  screen  screen  screen  screen  screen  screen    . "
+    " .   .       .       .       .       .       .       .         . "
+    " .   clear   .       open    .       close   .       divide    . "
+    " .   .       .       .       .       .       .       .         . "
+    " .   b_7     .       b_8     .       b_9     .       multiply  . "
+    " .   .       .       .       .       .       .       .         . "
+    " .   b_4     .       b_5     .       b_6     .       minus     . "
+    " .   .       .       .       .       .       .       .         . "
+    " .   b_1     .       b_2     .       b_3     .       plus      . "
+    " .   .       .       .       .       .       .       .         . "
+    " .   b_0     .       point   .       back    .       equal     . "
+    " .   .       .       .       .       .       .       .         . ";
 }
 
-#display {
-  width: var(--main-width);
-  height: var(--display-height);
-  background-color: black;
+#screen {
+  grid-area: screen;
+  background-color: var(--scr-color);
 }
 
 #input {
-  background-color: aquamarine;
-  width: var(--main-width);
-  height: var(--input-height);
+  background-color: var(--scr-color);
+  width: 100%;
+  height: calc(100% - var(--output-height));
   padding: var(--input-padding-size);
+  border: none;
   font-size: var(--input-font);
-
   resize: none;
   overflow: hidden;
 }
 
-#keyboard {
-  width: var(--main-width);
-  height: var(--keyboard-height);
-  padding: var(--keyboard-padding-size);
-  background: blue;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  place-items: center;
-  justify-content: stretch;
-  gap: var(--gap-size);
+#input:focus {
+  outline: none;
+}
+
+#output {
+  width: 100%;
+  height: var(--output-height);
+  background-color: var(--scr-color);
+  border: none;
 }
 
 .button {
-  width: var(--button-width);
-  height: var(--button-height);
-  background-color: var(--button-color1);
+  width: 100%;
+  height: 100%;
+  background-color: var(--btn-color1);
   border-radius: 10%;
   text-align: center;
   line-height: var(--button-size);
   font-size: var(--button-font);
+}
+
+.btn-color1 {
+  background-color: var(--btn-color1);
+}
+.btn-color2 {
+  background-color: var(--btn-color2);
+}
+.btn-color3 {
+  background-color: var(--btn-color3);
+}
+
+@media screen and (max-width: 1000px) and (min-aspect-ratio: 16/9) {
+  :root {
+    --main-width: min(max(100vw, 250px), 1000px);
+    --main-height: min(max(100vh, 250px), 500px);
+    --button-width: calc(
+      (var(--main-width) - 7 * var(--gap-size) - 2 * var(--padding-size)) / 8
+    );
+    --button-height: calc(
+      (var(--main-height) - 3 * var(--gap-size) - 2 * var(--padding-size)) / 4
+    );
+  }
+  #main {
+    background-color: var(--main-color);
+    width: var(--main-width);
+    height: var(--main-height);
+    display: grid;
+    /* justify-content: stretch; */
+    grid-template-columns:
+      var(--padding-size) repeat(7, var(--button-width) var(--gap-size)) var(
+        --button-width
+      )
+      var(--padding-size);
+    grid-template-rows:
+      var(--padding-size) repeat(3, var(--button-height) var(--gap-size)) var(
+        --button-height
+      )
+      var(--padding-size);
+    grid-template-areas:
+      " . .     . .     . .     . .     . .       .       .       .       .         .       .       . "
+      " . b_1   . b_2   . b_3   . b_4   . screen  screen  screen  screen  screen    screen  screen  . "
+      " . .     . .     . .     . .     . screen  screen  screen  screen  screen    screen  screen  . "
+      " . b_5   . b_6   . b_7   . b_8   . screen  screen  screen  screen  screen    screen  screen  . "
+      " . .     . .     . .     . .     . screen  screen  screen  screen  screen    screen  screen  . "
+      " . b_9   . b_0   . point . equal . screen  screen  screen  screen  screen    screen  screen  . "
+      " . .     . .     . .     . .     . .       .       .       .       .         .       .       . "
+      " . clear . back  . open  . close . plus    .       minus   .       multiply  .       divide  . "
+      " . .     . .   . .       . .     . .       .       .       .       .         .       .       . ";
+  }
 }

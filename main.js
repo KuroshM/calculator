@@ -1,5 +1,5 @@
 const body = document.getElementsByTagName("body")[0];
-const keyboard = document.getElementById("keyboard");
+const main = document.getElementById("main");
 const input = document.getElementById("input");
 
 const mainStyle = document.documentElement.style;
@@ -7,28 +7,46 @@ const mainStyle = document.documentElement.style;
 
 let cursorPos = 0;
 
-const keys = [
-  { text: "C", onClickEvent: "clearAll" },
-  { text: "(", onClickEvent: "typeIt" },
-  { text: ")", onClickEvent: "typeIt" },
-  { text: "/", onClickEvent: "typeIt" },
-  { text: "7", onClickEvent: "typeIt" },
-  { text: "8", onClickEvent: "typeIt" },
-  { text: "9", onClickEvent: "typeIt" },
-  { text: "*", onClickEvent: "typeIt" },
-  { text: "4", onClickEvent: "typeIt" },
-  { text: "5", onClickEvent: "typeIt" },
-  { text: "6", onClickEvent: "typeIt" },
-  { text: "+", onClickEvent: "typeIt" },
-  { text: "1", onClickEvent: "typeIt" },
-  { text: "2", onClickEvent: "typeIt" },
-  { text: "3", onClickEvent: "typeIt" },
-  { text: "-", onClickEvent: "typeIt" },
-  { text: "0", onClickEvent: "typeIt" },
-  { text: "<", onClickEvent: "clearBack" },
-  { text: ".", onClickEvent: "typeIt" },
-  { text: "=", onClickEvent: "calculate" },
-];
+class Key {
+  constructor(name, text, onClickEvent, color) {
+    this.name = name;
+    this.text = text;
+    this.onClickEvent = onClickEvent;
+    this.color = color;
+  }
+}
+
+const initKeys = () => {
+  const keys = [];
+  for (let num = 0; num < 10; num++) {
+    keys.push(new Key(`b_${num}`, `${num}`, `typeIt("${num}")`, "btn-color1"));
+  }
+  keys.push(new Key("point", ".", 'typeIt(".")', "btn-color1"));
+  [
+    { text: "+", name: "plus" },
+    { text: "-", name: "minus" },
+    { text: "*", name: "multiply" },
+    { text: "/", name: "divide" },
+  ].forEach(({ name, text }) => {
+    keys.push(new Key(name, text, `typeIt(\"${text}\")`, "btn-color2"));
+  });
+  [
+    { text: "(", name: "open" },
+    { text: ")", name: "close" },
+  ].forEach(({ name, text }) => {
+    keys.push(new Key(name, text, `typeIt(\"${text}\")`, "btn-color2"));
+  });
+  keys.push(new Key("clear", "C", "clearAll()", "btn-color3"));
+  keys.push(new Key("back", "<", "clearBack()", "btn-color3"));
+  keys.push(new Key("equal", "=", "calculate()", "btn-color2"));
+  return keys;
+};
+
+const keys = initKeys();
+
+const keyTexts = keys
+  .filter(key => key.onClickEvent.startsWith("typeIt"))
+  .map(({ text }) => text);
 
 const isMobile = () => {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -36,19 +54,16 @@ const isMobile = () => {
   );
 };
 
-const keyTexts = keys
-  .filter(key => key.onClickEvent == "typeIt")
-  .map(({ text }) => text);
-
 const init = () => {
-  let button_id = 0;
   keys.forEach(key => {
     const newButton = document.createElement("button");
-    newButton.setAttribute("button_id", button_id++);
+    // newButton.setAttribute("button_id", button_id++);
     newButton.classList.add("button");
+    newButton.classList.add(key.color);
     newButton.innerText = key.text;
-    newButton.setAttribute("onclick", key.onClickEvent + `("${key.text}")`);
-    keyboard.appendChild(newButton);
+    newButton.setAttribute("onclick", key.onClickEvent);
+    newButton.style.gridArea = key.name;
+    main.appendChild(newButton);
   });
 
   if (isMobile()) {
