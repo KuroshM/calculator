@@ -9,6 +9,7 @@ const output = document.getElementById("output");
 // mainStyle.setProperty("--button-font", "50px");
 
 let cursorPos = 0;
+let isFinalized = false;
 
 class Key {
   constructor(name, text, onClickEvent, color) {
@@ -103,8 +104,7 @@ const count = (str, char) => {
   // return (str.match(new RegExp(char, "g")) || []).length;
 };
 
-const validateInput = () => {
-  let text = input.value;
+const validateInput = text => {
   if (text.startsWith("*") || text.startsWith("/") || text.startsWith(".")) {
     text = "0" + text;
     cursorPos++;
@@ -126,8 +126,7 @@ const validateInput = () => {
       }
     }
   }
-
-  input.value = text;
+  return text;
 };
 
 const isTextSelected = () => {
@@ -145,16 +144,31 @@ const deleteSelected = () => {
   }
 };
 
+const finalize = () => {
+  if (isNaN(input.value)) {
+    input.value = getCompletedExpr(input.value);
+    main.classList.add("largeOutput");
+    resizeInOutText();
+    isFinalized = true;
+  }
+};
+
+const unFinalize = () => {
+  isFinalized = false;
+  main.classList.remove("largeOutput");
+};
+
 const clearAll = () => {
   input.value = "";
   cursorPos = 0;
   input.blur();
   main.classList.add("noOutput");
-  main.classList.remove("largeOutput");
   output.innerText = "";
+  unFinalize();
 };
 
 const clearBack = () => {
+  unFinalize();
   if (isTextSelected()) {
     deleteSelected();
   } else if (cursorPos > 0) {
@@ -168,7 +182,17 @@ const clearBack = () => {
 const typeIt = c => {
   if (isTextSelected()) {
     deleteSelected();
+  } else {
+    if (isFinalized) {
+      if (isMathSymbol(c)) {
+        input.value = output.innerText;
+        cursorPos = input.value.length;
+      } else {
+        clearAll();
+      }
+    }
   }
+  unFinalize();
   input.value =
     input.value.slice(0, cursorPos) + c + input.value.slice(cursorPos);
   cursorPos++;
@@ -207,14 +231,8 @@ const showHideOutput = () => {
 
 const checkInput = () => {
   checkIfActive();
-  validateInput();
+  input.value = validateInput(input.value);
   showHideOutput();
-  resizeInOutText();
-};
-
-const finalize = () => {
-  input.value = getCompletedExpr(input.value);
-  main.classList.add("largeOutput");
   resizeInOutText();
 };
 
