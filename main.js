@@ -3,10 +3,6 @@ const body = document.getElementsByTagName("body")[0];
 const main = document.getElementById("main");
 const input = document.getElementById("input");
 const output = document.getElementById("output");
-// const mainWidth = getPropValueInt(body, "width");
-
-// const mainStyle = document.documentElement.style;
-// mainStyle.setProperty("--button-font", "50px");
 
 let cursorPos = 0;
 let isFinalized = false;
@@ -61,7 +57,6 @@ const isMobile = () => {
 const init = () => {
   keys.forEach(key => {
     const newButton = document.createElement("button");
-    // newButton.setAttribute("button_id", button_id++);
     newButton.classList.add("button");
     newButton.classList.add(key.color);
     newButton.innerText = key.text;
@@ -101,7 +96,6 @@ const removeFromStr = (str, start, end) => {
 
 const count = (str, char) => {
   return str.split(char).length - 1;
-  // return (str.match(new RegExp(char, "g")) || []).length;
 };
 
 const validateInput = text => {
