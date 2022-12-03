@@ -1,8 +1,11 @@
+const root = document.documentElement;
 const body = document.getElementsByTagName("body")[0];
 const main = document.getElementById("main");
 const input = document.getElementById("input");
+const output = document.getElementById("output");
+// const mainWidth = getPropValueInt(body, "width");
 
-const mainStyle = document.documentElement.style;
+// const mainStyle = document.documentElement.style;
 // mainStyle.setProperty("--button-font", "50px");
 
 let cursorPos = 0;
@@ -38,7 +41,7 @@ const initKeys = () => {
   });
   keys.push(new Key("clear", "C", "clearAll()", "btn-color3"));
   keys.push(new Key("back", "<", "clearBack()", "btn-color3"));
-  keys.push(new Key("equal", "=", "calculate()", "btn-color2"));
+  keys.push(new Key("equal", "=", "finalize()", "btn-color2"));
   return keys;
 };
 
@@ -72,7 +75,7 @@ const init = () => {
 
   body.addEventListener("keydown", keyPressedEvent);
   input.addEventListener("click", inputClickEvent);
-  window.addEventListener("resize", resizeInputText);
+  window.addEventListener("resize", resizeInOutText);
 };
 
 const checkIfActive = () => {
@@ -86,6 +89,47 @@ const checkIfActive = () => {
   input.focus();
 };
 
+const isMathSymbol = c => {
+  return c == "+" || c == "-" || c == "*" || c == "/";
+};
+
+const removeFromStr = (str, start, end) => {
+  end = end || start + 1;
+  return str.slice(0, start) + str.slice(end);
+};
+
+const count = (str, char) => {
+  return str.split(char).length - 1;
+  // return (str.match(new RegExp(char, "g")) || []).length;
+};
+
+const validateInput = () => {
+  let text = input.value;
+  if (text.startsWith("*") || text.startsWith("/") || text.startsWith(".")) {
+    text = "0" + text;
+    cursorPos++;
+    // if curser is not at the end
+  } else if (text[cursorPos]) {
+    // if curser is at the end
+  } else {
+    if (isMathSymbol(text[cursorPos - 2])) {
+      if (isMathSymbol(text[cursorPos - 1])) {
+        text = removeFromStr(text, cursorPos - 2);
+        cursorPos--;
+      } else if (text[cursorPos - 1] == ")") {
+        if (count(text, "(") >= count(text, ")")) {
+          text = removeFromStr(text, cursorPos - 2);
+        } else {
+          text = removeFromStr(text, cursorPos - 1);
+        }
+        cursorPos--;
+      }
+    }
+  }
+
+  input.value = text;
+};
+
 const isTextSelected = () => {
   return input.selectionStart != input.selectionEnd;
 };
@@ -93,9 +137,11 @@ const isTextSelected = () => {
 const deleteSelected = () => {
   if (!isMobile() && isTextSelected) {
     cursorPos = input.selectionStart;
-    input.value =
-      input.value.slice(0, input.selectionStart) +
-      input.value.slice(input.selectionEnd);
+    input.value = removeFromStr(
+      input.value,
+      input.selectionStart,
+      input.selectionEnd
+    );
   }
 };
 
@@ -103,6 +149,9 @@ const clearAll = () => {
   input.value = "";
   cursorPos = 0;
   input.blur();
+  main.classList.add("noOutput");
+  main.classList.remove("largeOutput");
+  output.innerText = "";
 };
 
 const clearBack = () => {
@@ -126,15 +175,47 @@ const typeIt = c => {
   checkInput();
 };
 
-const calculate = () => {
-  resizeInputText();
+const getCompletedExpr = expr => {
+  if (expr[expr.length - 1] === "(") {
+    expr = removeFromStr(expr, expr.length - 1);
+  }
+  if (isMathSymbol(expr[expr.length - 1])) {
+    expr = removeFromStr(expr, expr.length - 1);
+  }
+  for (let i = 0; i < count(expr, "(") - count(expr, ")"); i++) {
+    expr += ")";
+  }
+  return expr;
+};
 
-  console.log("= was pressed!");
+const calculate = () => {
+  try {
+    output.innerText = eval(getCompletedExpr(input.value));
+  } catch (error) {
+    output.innerText = "Error";
+  }
+};
+
+const showHideOutput = () => {
+  if (isNaN(input.value)) {
+    main.classList.remove("noOutput");
+    calculate();
+  } else {
+    main.classList.add("noOutput");
+  }
 };
 
 const checkInput = () => {
   checkIfActive();
-  resizeInputText();
+  validateInput();
+  showHideOutput();
+  resizeInOutText();
+};
+
+const finalize = () => {
+  input.value = getCompletedExpr(input.value);
+  main.classList.add("largeOutput");
+  resizeInOutText();
 };
 
 const keyPressedEvent = e => {
@@ -151,7 +232,8 @@ const keyPressedEvent = e => {
         clearBack();
         break;
       case "=":
-        calculate();
+      case "Enter":
+        finalize();
         break;
       case "ArrowRight":
         if (cursorPos < input.value.length) {
@@ -178,10 +260,11 @@ const getTextWidth = (text, font) => {
   document.body.appendChild(dummy);
 
   dummy.style.font = font;
+  dummy.style.fontSize = "100px";
   dummy.style.height = "auto";
   dummy.style.width = "auto";
   dummy.style.position = "absolute";
-  dummy.style.whiteSpace = "no-wrap";
+  dummy.style.whiteSpace = "nowrap";
   dummy.innerHTML = text;
 
   width = dummy.clientWidth;
@@ -203,19 +286,37 @@ const getPropValueInt = (elem, prop) => {
   return parseInt(getPropValue(elem, prop));
 };
 
+const resizeInOutText = () => {
+  resizeInputText();
+  resizeOutputText();
+};
+
 const resizeInputText = () => {
-  const textWidth = getTextWidth(input.value, getPropValue(input, "font"));
+  root.style.setProperty(
+    "--input-font",
+    "" + getDesiredElementFont(input) + "px"
+  );
+};
 
-  const currentFontSize = getPropValueInt(input, "font-size");
-  const currentPadding = getPropValueInt(input, "padding");
-  const currentWidth = input.clientWidth - 2 * currentPadding;
-  let newFontSize = (currentFontSize * currentWidth * 0.95) / textWidth;
-  const root = document.documentElement;
-  const maxFontSize = getPropValueInt(root, "--input-max-font");
-  const minFontSize = getPropValueInt(root, "--input-min-font");
-  newFontSize = Math.min(maxFontSize, Math.max(newFontSize, minFontSize));
+const resizeOutputText = () => {
+  root.style.setProperty(
+    "--output-font",
+    "" + getDesiredElementFont(output) + "px"
+  );
+};
 
-  root.style.setProperty("--input-font", "" + newFontSize + "px");
+const mainWidth = getPropValueInt(input, "width");
+const getDesiredElementFont = elem => {
+  const textWidth = getTextWidth(
+    elem.value || elem.innerText,
+    getPropValue(elem, "font")
+  );
+
+  const currentPadding = getPropValueInt(elem, "padding");
+  const currentWidth = mainWidth - 2 * currentPadding;
+  const newFontSize = (currentWidth * 95) / textWidth;
+  const height = getPropValueInt(elem, "height") * 0.95;
+  return Math.min(newFontSize, height);
 };
 
 init();

@@ -2,31 +2,33 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  border: none;
 }
 
 :root {
-  --main-width: min(max(100vw, 250px), 500px);
-  --main-height: min(max(100vh, 250px), 1000px);
+  --main-width: clamp(250px, 100vw, 500px);
+  --main-height: clamp(250px, 100vh, 1000px);
   --screen-height: calc(0.3 * var(--main-height));
-  --keyboard-height: calc(
-    var(--main-height) - var(--screen-height) - var(--gap-size) -
-      var(--padding-size) * 2
-  );
+  /* prettier-ignore */
+  --keyboard-height: calc(var(--main-height) 
+                        - var(--screen-height) 
+                        - var(--gap-size)
+                        - var(--padding-size) * 2);
   --input-padding-size: 10px;
   --gap-size: 10px;
   --padding-size: 10px;
-  --button-font: 50px;
-  --input-max-font: 100px;
-  --input-min-font: 30px;
-  --output-height: 20%;
+  --output-height: 35%;
+  --screen-max-font: 20vmin;
+  --screen-min-font: 5vmin;
 }
 
 :root {
-  --button-width: calc(
-    (var(--main-width) - 3 * var(--gap-size) - 2 * var(--padding-size)) / 4
-  );
+  /* prettier-ignore */
+  --button-width: calc((var(--main-width) - 3 * var(--gap-size) - 2 * var(--padding-size)) / 4);
   --button-height: calc((var(--keyboard-height) - 4 * var(--gap-size)) / 5);
-  --input-font: var(--input-max-font);
+  --input-font: var(--screen-max-font);
+  --output-font: var(--screen-max-font);
+  --button-font: calc(min(var(--button-width), var(--button-height)) / 2);
 }
 
 .light {
@@ -35,12 +37,24 @@
   --btn-color1: rgb(24, 171, 171);
   --btn-color2: rgb(63, 145, 145);
   --btn-color3: rgb(133, 184, 166);
+  --output-color: rgb(36, 34, 34);
+  --input-color: rgb(24, 23, 23);
 }
 
 .center {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.largeOutput {
+  --output-height: 60%;
+  --output-color: black;
+  --input-color: rgb(49, 49, 49);
+}
+
+.noOutput {
+  --output-height: 0%;
 }
 
 body {
@@ -55,16 +69,17 @@ body {
   height: var(--main-height);
   display: grid;
   /* justify-content: stretch; */
+  /* prettier-ignore */
   grid-template-columns:
-    var(--padding-size) repeat(3, var(--button-width) var(--gap-size)) var(
-      --button-width
-    )
+    var(--padding-size)
+    repeat(3, var(--button-width) var(--gap-size))
+    var(--button-width)
     var(--padding-size);
+  /* prettier-ignore */
   grid-template-rows:
-    var(--padding-size) var(--screen-height) repeat(
-      5,
-      var(--gap-size) var(--button-height)
-    )
+    var(--padding-size)
+    var(--screen-height)
+    repeat(5, var(--gap-size) var(--button-height))
     var(--padding-size);
   grid-template-areas:
     " .   .       .       .       .       .       .       .         . "
@@ -92,8 +107,12 @@ body {
   width: 100%;
   height: calc(100% - var(--output-height));
   padding: var(--input-padding-size);
-  border: none;
-  font-size: var(--input-font);
+  color: var(--input-color);
+  font-size: clamp(
+    var(--screen-min-font),
+    var(--input-font),
+    var(--screen-max-font)
+  );
   resize: none;
   overflow: hidden;
 }
@@ -103,10 +122,17 @@ body {
 }
 
 #output {
+  font-family: monospace, monospace;
+  color: var(--output-color);
   width: 100%;
   height: var(--output-height);
   background-color: var(--scr-color);
-  border: none;
+  font-size: clamp(
+    var(--screen-min-font),
+    var(--output-font),
+    var(--screen-max-font)
+  );
+  overflow: hidden;
 }
 
 .button {
@@ -133,28 +159,27 @@ body {
   :root {
     --main-width: min(max(100vw, 250px), 1000px);
     --main-height: min(max(100vh, 250px), 500px);
-    --button-width: calc(
-      (var(--main-width) - 7 * var(--gap-size) - 2 * var(--padding-size)) / 8
-    );
-    --button-height: calc(
-      (var(--main-height) - 3 * var(--gap-size) - 2 * var(--padding-size)) / 4
-    );
+    /* prettier-ignore */
+    --button-width: calc((var(--main-width) - 7 * var(--gap-size) - 2 * var(--padding-size)) / 8);
+    /* prettier-ignore */
+    --button-height: calc((var(--main-height) - 3 * var(--gap-size) - 2 * var(--padding-size)) / 4);
   }
   #main {
     background-color: var(--main-color);
     width: var(--main-width);
     height: var(--main-height);
     display: grid;
-    /* justify-content: stretch; */
+    /* prettier-ignore */
     grid-template-columns:
-      var(--padding-size) repeat(7, var(--button-width) var(--gap-size)) var(
-        --button-width
-      )
+      var(--padding-size)
+      repeat(7, var(--button-width) var(--gap-size))
+      var(--button-width)
       var(--padding-size);
+    /* prettier-ignore */
     grid-template-rows:
-      var(--padding-size) repeat(3, var(--button-height) var(--gap-size)) var(
-        --button-height
-      )
+      var(--padding-size)
+      repeat(3, var(--button-height) var(--gap-size))
+      var(--button-height)
       var(--padding-size);
     grid-template-areas:
       " . .     . .     . .     . .     . .       .       .       .       .         .       .       . "
