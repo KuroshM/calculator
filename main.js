@@ -6,6 +6,7 @@ const output = document.getElementById("output");
 
 let cursorPos = 0;
 let isFinalized = false;
+let showError = false;
 
 class Key {
   constructor(name, text, onClickEvent, color) {
@@ -98,18 +99,24 @@ const count = (str, char) => {
   return str.split(char).length - 1;
 };
 
-const validateInput = text => {
-  if (text.startsWith("*") || text.startsWith("/") || text.startsWith(".")) {
-    text = "0" + text;
-    cursorPos++;
-    // if curser is not at the end
-  } else if (text[cursorPos]) {
+const validateInput = () => {
+  let text = input.value;
+  // if (text.startsWith("*") || text.startsWith("/") || text.startsWith(".")) {
+  //   text = "0" + text;
+  //   cursorPos++;
+  //   // if curser is not at the end
+  // } else
+  if (text[cursorPos]) {
     // if curser is at the end
   } else {
     if (isMathSymbol(text[cursorPos - 2])) {
       if (isMathSymbol(text[cursorPos - 1])) {
         text = removeFromStr(text, cursorPos - 2);
         cursorPos--;
+        // } else if (text[cursorPos - 1] == ".") {
+        //   text = removeFromStr(text, cursorPos - 1);
+        //   text += "0.";
+        //   cursorPos++;
       } else if (text[cursorPos - 1] == ")") {
         if (count(text, "(") >= count(text, ")")) {
           text = removeFromStr(text, cursorPos - 2);
@@ -120,7 +127,24 @@ const validateInput = text => {
       }
     }
   }
-  return text;
+  input.value = text;
+};
+
+const getCompletedExpr = expr => {
+  if (expr[expr.length - 1] === ".") {
+    expr = removeFromStr(expr, expr.length - 1);
+  }
+  if (expr[expr.length - 1] === "(") {
+    expr = removeFromStr(expr, expr.length - 1);
+  }
+  if (isMathSymbol(expr[expr.length - 1])) {
+    expr = removeFromStr(expr, expr.length - 1);
+  }
+
+  for (let i = 0; i < count(expr, "(") - count(expr, ")"); i++) {
+    expr += ")";
+  }
+  return expr;
 };
 
 const isTextSelected = () => {
@@ -144,11 +168,15 @@ const finalize = () => {
     main.classList.add("largeOutput");
     resizeInOutText();
     isFinalized = true;
+    if (output.innerText == "") {
+      output.innerText = "Error";
+    }
   }
 };
 
 const unFinalize = () => {
   isFinalized = false;
+  showError = false;
   main.classList.remove("largeOutput");
 };
 
@@ -193,24 +221,11 @@ const typeIt = c => {
   checkInput();
 };
 
-const getCompletedExpr = expr => {
-  if (expr[expr.length - 1] === "(") {
-    expr = removeFromStr(expr, expr.length - 1);
-  }
-  if (isMathSymbol(expr[expr.length - 1])) {
-    expr = removeFromStr(expr, expr.length - 1);
-  }
-  for (let i = 0; i < count(expr, "(") - count(expr, ")"); i++) {
-    expr += ")";
-  }
-  return expr;
-};
-
 const calculate = () => {
   try {
     output.innerText = eval(getCompletedExpr(input.value));
   } catch (error) {
-    output.innerText = "Error";
+    output.innerText = "";
   }
 };
 
@@ -225,7 +240,7 @@ const showHideOutput = () => {
 
 const checkInput = () => {
   checkIfActive();
-  input.value = validateInput(input.value);
+  validateInput();
   showHideOutput();
   resizeInOutText();
 };
