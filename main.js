@@ -26,8 +26,8 @@ const initKeys = () => {
   [
     { text: "+", name: "plus" },
     { text: "-", name: "minus" },
-    { text: "*", name: "multiply" },
-    { text: "/", name: "divide" },
+    { text: "\xD7", name: "multiply" },
+    { text: "\xF7", name: "divide" },
   ].forEach(({ name, text }) => {
     keys.push(new Key(name, text, `typeIt(\"${text}\")`, "btn-color2"));
   });
@@ -87,7 +87,7 @@ const checkIfActive = () => {
 };
 
 const isMathSymbol = c => {
-  return c == "+" || c == "-" || c == "*" || c == "/";
+  return c == "+" || c == "-" || c == "\xD7" || c == "\xF7";
 };
 
 const removeFromStr = (str, start, end) => {
@@ -223,7 +223,10 @@ const typeIt = c => {
 
 const calculate = () => {
   try {
-    output.innerText = eval(getCompletedExpr(input.value));
+    const expr = getCompletedExpr(input.value)
+      .replace(/\xD7/g, "*")
+      .replace(/\xF7/g, "/");
+    output.innerText = eval(expr);
   } catch (error) {
     output.innerText = "";
   }
@@ -319,17 +322,11 @@ const resizeInOutText = () => {
 };
 
 const resizeInputText = () => {
-  root.style.setProperty(
-    "--input-font",
-    "" + getDesiredElementFont(input) + "px"
-  );
+  root.style.setProperty("--input-font", `${getDesiredElementFont(input)}px`);
 };
 
 const resizeOutputText = () => {
-  root.style.setProperty(
-    "--output-font",
-    "" + getDesiredElementFont(output) + "px"
-  );
+  root.style.setProperty("--output-font", `${getDesiredElementFont(output)}px`);
 };
 
 const mainWidth = getPropValueInt(input, "width");
