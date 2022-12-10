@@ -9,11 +9,12 @@ let isFinalized = false;
 let showError = false;
 
 class Key {
-  constructor(name, text, onClickEvent, color) {
+  constructor(name, text, onClickEvent, color, keyboardKey) {
     this.name = name;
     this.text = text;
     this.onClickEvent = onClickEvent;
     this.color = color;
+    this.keyboardKey = keyboardKey || [text];
   }
 }
 
@@ -26,10 +27,12 @@ const initKeys = () => {
   [
     { text: "+", name: "plus" },
     { text: "-", name: "minus" },
-    { text: "\xD7", name: "multiply" },
-    { text: "\xF7", name: "divide" },
-  ].forEach(({ name, text }) => {
-    keys.push(new Key(name, text, `typeIt(\"${text}\")`, "btn-color2"));
+    { text: "\xD7", name: "multiply", keyboardKey: ["*"] },
+    { text: "\xF7", name: "divide", keyboardKey: ["/"] },
+  ].forEach(({ name, text, keyboardKey }) => {
+    keys.push(
+      new Key(name, text, `typeIt(\"${text}\")`, "btn-color2", keyboardKey)
+    );
   });
   [
     { text: "(", name: "open" },
@@ -37,17 +40,13 @@ const initKeys = () => {
   ].forEach(({ name, text }) => {
     keys.push(new Key(name, text, `typeIt(\"${text}\")`, "btn-color2"));
   });
-  keys.push(new Key("clear", "C", "clearAll()", "btn-color3"));
-  keys.push(new Key("back", "<", "clearBack()", "btn-color3"));
-  keys.push(new Key("equal", "=", "finalize()", "btn-color2"));
+  keys.push(new Key("clear", "C", "clearAll()", "btn-color3", ["Escape"]));
+  keys.push(new Key("back", "<", "clearBack()", "btn-color3", ["Backspace"]));
+  keys.push(new Key("equal", "=", "finalize()", "btn-color2", ["Enter", "="]));
   return keys;
 };
 
 const keys = initKeys();
-
-const keyTexts = keys
-  .filter(key => key.onClickEvent.startsWith("typeIt"))
-  .map(({ text }) => text);
 
 const isMobile = () => {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -58,6 +57,7 @@ const isMobile = () => {
 const init = () => {
   keys.forEach(key => {
     const newButton = document.createElement("button");
+    newButton.id = key.name;
     newButton.classList.add("button");
     newButton.classList.add(key.color);
     newButton.innerText = key.text;
@@ -250,21 +250,17 @@ const checkInput = () => {
 
 const keyPressedEvent = e => {
   e.preventDefault();
-  const key = e.key;
-  if (keyTexts.includes(key)) {
-    typeIt(key);
-  } else {
-    switch (key) {
-      case "Escape":
-        clearAll();
-        break;
-      case "Backspace":
-        clearBack();
-        break;
-      case "=":
-      case "Enter":
-        finalize();
-        break;
+  const pressedKey = e.key;
+  let keyFound = false;
+  keys.some(key => {
+    if (key.keyboardKey.includes(pressedKey)) {
+      document.getElementById(key.name).click();
+      keyFound = true;
+    }
+    return keyFound;
+  });
+  if (!keyFound) {
+    switch (pressedKey) {
       case "ArrowRight":
         if (cursorPos < input.value.length) {
           cursorPos++;
