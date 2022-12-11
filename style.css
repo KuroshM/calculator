@@ -38,11 +38,9 @@
   --btn-color1: rgb(24, 171, 171);
   --btn-color2: rgb(63, 145, 145);
   --btn-color3: rgb(133, 184, 166);
-  --btn-color1-hover: rgb(14, 161, 141);
-  --btn-color2-hover: rgb(53, 135, 135);
-  --btn-color3-hover: rgb(123, 174, 156);
   --output-color: rgb(36, 34, 34);
   --input-color: rgb(24, 23, 23);
+  --hover-brightness: 90%;
 }
 
 .center {
@@ -165,17 +163,9 @@ body {
 }
 
 @media (hover: hover) {
-  .btn-color1:hover,
-  .btn-color1.clicked {
-    background-color: var(--btn-color1-hover);
-  }
-  .btn-color2:hover,
-  .btn-color2.clicked {
-    background-color: var(--btn-color2-hover);
-  }
-  .btn-color3:hover,
-  .btn-color3.clicked {
-    background-color: var(--btn-color3-hover);
+  .button:hover,
+  .button.clicked {
+    filter: brightness(var(--hover-brightness));
   }
 }
 
