@@ -1,8 +1,19 @@
+const getPropValue = (elem, prop) => {
+  return getComputedStyle(elem).getPropertyValue(prop);
+};
+const getPropValueInt = (elem, prop) => {
+  return parseInt(getPropValue(elem, prop));
+};
+const getPropValueFloat = (elem, prop) => {
+  return parseFloat(getPropValue(elem, prop));
+};
+
 const root = document.documentElement;
 const body = document.getElementsByTagName("body")[0];
 const main = document.getElementById("main");
 const input = document.getElementById("input");
 const output = document.getElementById("output");
+const btnClickTime = getPropValueFloat(root, "--btn-click-time") * 1000;
 
 let cursorPos = 0;
 let isFinalized = false;
@@ -15,6 +26,15 @@ class Key {
     this.onClickEvent = onClickEvent;
     this.color = color;
     this.keyboardKey = keyboardKey || [text];
+  }
+
+  click() {
+    const btn = document.getElementById(this.name);
+    btn.classList.add("clicked");
+    eval(`${this.onClickEvent}`);
+    setTimeout(() => {
+      btn.classList.remove("clicked");
+    }, btnClickTime);
   }
 }
 
@@ -54,14 +74,18 @@ const isMobile = () => {
   );
 };
 
+const clickIt = keyIndex => {
+  keys[keyIndex].click();
+};
+
 const init = () => {
-  keys.forEach(key => {
+  keys.forEach((key, index) => {
     const newButton = document.createElement("button");
     newButton.id = key.name;
     newButton.classList.add("button");
     newButton.classList.add(key.color);
     newButton.innerText = key.text;
-    newButton.setAttribute("onclick", key.onClickEvent);
+    newButton.setAttribute("onclick", `clickIt(${index})`);
     newButton.style.gridArea = key.name;
     main.appendChild(newButton);
   });
@@ -162,15 +186,20 @@ const deleteSelected = () => {
   }
 };
 
+const isExpr = expr => {
+  return isNaN(expr) && isNaN(getCompletedExpr(expr));
+};
+
 const finalize = () => {
-  if (isNaN(input.value)) {
-    input.value = getCompletedExpr(input.value);
+  input.value = getCompletedExpr(input.value);
+  cursorPos = input.value.length;
+  if (isExpr(input.value)) {
     main.classList.add("largeOutput");
-    resizeInOutText();
     isFinalized = true;
     if (output.innerText == "") {
-      output.innerText = "Error";
+      output.innerText = "Syntax Error";
     }
+    resizeInOutText();
   }
 };
 
@@ -226,14 +255,14 @@ const calculate = () => {
     const expr = getCompletedExpr(input.value)
       .replace(/\xD7/g, "*")
       .replace(/\xF7/g, "/");
-    output.innerText = eval(expr);
+    output.innerText = eval(expr) || "";
   } catch (error) {
     output.innerText = "";
   }
 };
 
 const showHideOutput = () => {
-  if (isNaN(input.value)) {
+  if (isExpr(input.value)) {
     main.classList.remove("noOutput");
     calculate();
   } else {
@@ -254,7 +283,7 @@ const keyPressedEvent = e => {
   let keyFound = false;
   keys.some(key => {
     if (key.keyboardKey.includes(pressedKey)) {
-      document.getElementById(key.name).click();
+      key.click();
       keyFound = true;
     }
     return keyFound;
@@ -302,14 +331,6 @@ const inputClickEvent = () => {
   if (!isMobile()) {
     cursorPos = input.selectionStart;
   }
-};
-
-const getPropValue = (elem, prop) => {
-  return getComputedStyle(elem).getPropertyValue(prop);
-};
-
-const getPropValueInt = (elem, prop) => {
-  return parseInt(getPropValue(elem, prop));
 };
 
 const resizeInOutText = () => {
