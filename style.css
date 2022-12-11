@@ -105,7 +105,7 @@ body {
 }
 
 #input {
-  background-color: var(--scr-color);
+  background-color: transparent;
   width: 100%;
   height: calc(100% - var(--output-height));
   padding: var(--input-padding-size);
@@ -124,11 +124,11 @@ body {
 }
 
 #output {
+  background-color: transparent;
   font-family: monospace, monospace;
   color: var(--output-color);
   width: 100%;
   height: var(--output-height);
-  background-color: var(--scr-color);
   font-size: clamp(
     var(--screen-min-font),
     var(--output-font),
