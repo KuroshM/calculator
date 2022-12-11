@@ -151,7 +151,7 @@ body {
 }
 
 .button.clicked {
-  transform: scale(0.96);
+  transform: scale(0.92);
 }
 
 .btn-color1 {
@@ -164,17 +164,19 @@ body {
   background-color: var(--btn-color3);
 }
 
-.btn-color1:hover,
-.btn-color1.clicked {
-  background-color: var(--btn-color1-hover);
-}
-.btn-color2:hover,
-.btn-color2.clicked {
-  background-color: var(--btn-color2-hover);
-}
-.btn-color3:hover,
-.btn-color3.clicked {
-  background-color: var(--btn-color3-hover);
+@media (hover: hover) {
+  .btn-color1:hover,
+  .btn-color1.clicked {
+    background-color: var(--btn-color1-hover);
+  }
+  .btn-color2:hover,
+  .btn-color2.clicked {
+    background-color: var(--btn-color2-hover);
+  }
+  .btn-color3:hover,
+  .btn-color3.clicked {
+    background-color: var(--btn-color3-hover);
+  }
 }
 
 @media screen and (max-width: 1000px) and (min-aspect-ratio: 16/9) {
