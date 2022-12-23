@@ -74,6 +74,16 @@ const isMobile = () => {
   );
 };
 
+const setHeight = () => {
+  const vh = window.innerHeight;
+  document.documentElement.style.setProperty("--viewport-height", `${vh}px`);
+};
+
+const windowResized = () => {
+  setHeight();
+  resizeInOutText();
+};
+
 const clickIt = keyIndex => {
   keys[keyIndex].click();
 };
@@ -94,9 +104,11 @@ const init = () => {
     input.setAttribute("readonly", "readonly");
   }
 
+  setHeight();
+
   body.addEventListener("keydown", keyPressedEvent);
   input.addEventListener("click", inputClickEvent);
-  window.addEventListener("resize", resizeInOutText);
+  window.addEventListener("resize", windowResized);
 };
 
 const checkIfActive = () => {
