@@ -1,9 +1,11 @@
 const getPropValue = (elem, prop) => {
   return getComputedStyle(elem).getPropertyValue(prop);
 };
+
 const getPropValueInt = (elem, prop) => {
   return parseInt(getPropValue(elem, prop));
 };
+
 const getPropValueFloat = (elem, prop) => {
   return parseFloat(getPropValue(elem, prop));
 };
@@ -14,6 +16,7 @@ const main = document.getElementById("main");
 const input = document.getElementById("input");
 const output = document.getElementById("output");
 const btnClickTime = getPropValueFloat(root, "--btn-click-time") * 1000;
+const mainWidth = getPropValueInt(input, "width");ß
 
 let cursorPos = 0;
 let isFinalized = false;
@@ -358,7 +361,6 @@ const resizeOutputText = () => {
   root.style.setProperty("--output-font", `${getDesiredElementFont(output)}px`);
 };
 
-const mainWidth = getPropValueInt(input, "width");
 const getDesiredElementFont = elem => {
   const textWidth = getTextWidth(
     elem.value || elem.innerText,
