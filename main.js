@@ -1,3 +1,15 @@
+const getPropValue = (elem, prop) => {
+  return getComputedStyle(elem).getPropertyValue(prop);
+};
+
+const getPropValueInt = (elem, prop) => {
+  return parseInt(getPropValue(elem, prop));
+};
+
+const getPropValueFloat = (elem, prop) => {
+  return parseFloat(getPropValue(elem, prop));
+};
+
 const root = document.documentElement;
 
 const body = document.getElementsByTagName("body")[0];
@@ -13,18 +25,6 @@ const keys = initKeys();
 let cursorPos = 0;
 let isFinalized = false;
 let showError = false;
-
-const getPropValue = (elem, prop) => {
-  return getComputedStyle(elem).getPropertyValue(prop);
-};
-
-const getPropValueInt = (elem, prop) => {
-  return parseInt(getPropValue(elem, prop));
-};
-
-const getPropValueFloat = (elem, prop) => {
-  return parseFloat(getPropValue(elem, prop));
-};
 
 class Key {
   constructor(name, text, onClickEvent, color, keyboardKey) {
