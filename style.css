@@ -1,211 +1,211 @@
 * {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	border: none;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border: none;
 }
 
 :root {
-	--viewport-height: 90vh;
-	--main-width: clamp(250px, 100vw, 500px);
-	--main-height: clamp(250px, var(--viewport-height), 1000px);
-	--screen-height: calc(0.3 * var(--main-height));
-	/* prettier-ignore */
-	--keyboard-height: calc(var(--main-height) 
+  --viewport-height: 90vh;
+  --main-width: clamp(250px, 100vw, 500px);
+  --main-height: clamp(250px, var(--viewport-height), 1000px);
+  --screen-height: calc(0.3 * var(--main-height));
+  /* prettier-ignore */
+  --keyboard-height: calc(var(--main-height) 
                         - var(--screen-height) 
                         - var(--gap-size)
                         - var(--padding-size) * 2);
-	--input-padding-size: 10px;
-	--gap-size: 10px;
-	--padding-size: 15px;
-	--output-height: 35%;
-	--screen-max-font: 15vmin;
-	--screen-min-font: 5vmin;
-	--btn-click-time: 0.05s;
+  --input-padding-size: 10px;
+  --gap-size: 10px;
+  --padding-size: 15px;
+  --output-height: 35%;
+  --screen-max-font: 15vmin;
+  --screen-min-font: 5vmin;
+  --btn-click-time: 0.05s;
 }
 
 :root {
-	/* prettier-ignore */
-	--button-width: calc((var(--main-width) - 3 * var(--gap-size) - 2 * var(--padding-size)) / 4);
-	--button-height: calc((var(--keyboard-height) - 4 * var(--gap-size)) / 5);
-	--input-font: var(--screen-max-font);
-	--output-font: var(--screen-max-font);
-	--button-font: calc(min(var(--button-width), var(--button-height)) / 1.7);
+  /* prettier-ignore */
+  --button-width: calc((var(--main-width) - 3 * var(--gap-size) - 2 * var(--padding-size)) / 4);
+  --button-height: calc((var(--keyboard-height) - 4 * var(--gap-size)) / 5);
+  --input-font: var(--screen-max-font);
+  --output-font: var(--screen-max-font);
+  --button-font: calc(min(var(--button-width), var(--button-height)) / 1.7);
 }
 
 .light {
-	--main-color: #d8d8d8;
-	--scr-color: #d3ffe4;
-	--btn-color1: #a4a4a4;
-	--btn-color2: #b5adff;
-	--btn-color3: #ff9494;
-	--output-color: #210064;
-	--input-color: #181717;
-	--hover-brightness: 90%;
+  --main-color: #d8d8d8;
+  --scr-color: #d3ffe4;
+  --btn-color1: #a4a4a4;
+  --btn-color2: #b5adff;
+  --btn-color3: #ff9494;
+  --output-color: #210064;
+  --input-color: #181717;
+  --hover-brightness: 90%;
 }
 
 .center {
-	display: flex;
-	justify-content: center;
-	align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .largeOutput {
-	--output-height: 55%;
-	--output-color: #5d1023;
-	--input-color: #6c6c6c;
-	text-align: center;
+  --output-height: 55%;
+  --output-color: #5d1023;
+  --input-color: #6c6c6c;
+  text-align: center;
 }
 
 .noOutput {
-	--output-height: 0%;
+  --output-height: 0%;
 }
 
 body {
-	width: 100vw;
-	height: var(--viewport-height);
-	/* height: -webkit-fill-available; */
+  width: 100vw;
+  height: var(--viewport-height);
+  /* height: -webkit-fill-available; */
 }
 
 #main {
-	background-color: var(--main-color);
-	width: var(--main-width);
-	height: var(--main-height);
-	display: grid;
-	/* justify-content: stretch; */
-	/* prettier-ignore */
-	grid-template-columns:
+  background-color: var(--main-color);
+  width: var(--main-width);
+  height: var(--main-height);
+  display: grid;
+  /* justify-content: stretch; */
+  /* prettier-ignore */
+  grid-template-columns:
     var(--padding-size)
     repeat(3, var(--button-width) var(--gap-size))
     var(--button-width)
     var(--padding-size);
-	/* prettier-ignore */
-	grid-template-rows:
+  /* prettier-ignore */
+  grid-template-rows:
     var(--padding-size)
     var(--screen-height)
     repeat(5, var(--gap-size) var(--button-height))
     var(--padding-size);
-	grid-template-areas:
-		" .   .       .       .       .       .       .       .         . "
-		" .   screen  screen  screen  screen  screen  screen  screen    . "
-		" .   .       .       .       .       .       .       .         . "
-		" .   clear   .       open    .       close   .       divide    . "
-		" .   .       .       .       .       .       .       .         . "
-		" .   b_7     .       b_8     .       b_9     .       multiply  . "
-		" .   .       .       .       .       .       .       .         . "
-		" .   b_4     .       b_5     .       b_6     .       minus     . "
-		" .   .       .       .       .       .       .       .         . "
-		" .   b_1     .       b_2     .       b_3     .       plus      . "
-		" .   .       .       .       .       .       .       .         . "
-		" .   b_0     .       point   .       back    .       equal     . "
-		" .   .       .       .       .       .       .       .         . ";
+  grid-template-areas:
+    " .   .       .       .       .       .       .       .         . "
+    " .   screen  screen  screen  screen  screen  screen  screen    . "
+    " .   .       .       .       .       .       .       .         . "
+    " .   clear   .       open    .       close   .       divide    . "
+    " .   .       .       .       .       .       .       .         . "
+    " .   b_7     .       b_8     .       b_9     .       multiply  . "
+    " .   .       .       .       .       .       .       .         . "
+    " .   b_4     .       b_5     .       b_6     .       minus     . "
+    " .   .       .       .       .       .       .       .         . "
+    " .   b_1     .       b_2     .       b_3     .       plus      . "
+    " .   .       .       .       .       .       .       .         . "
+    " .   b_0     .       point   .       back    .       equal     . "
+    " .   .       .       .       .       .       .       .         . ";
 }
 
 #screen {
-	grid-area: screen;
-	background-color: var(--scr-color);
+  grid-area: screen;
+  background-color: var(--scr-color);
 }
 
 #input {
-	background-color: transparent;
-	width: 100%;
-	height: calc(100% - var(--output-height));
-	padding: var(--input-padding-size);
-	color: var(--input-color);
-	font-size: clamp(
-		var(--screen-min-font),
-		var(--input-font),
-		var(--screen-max-font)
-	);
-	resize: none;
-	overflow: hidden;
+  background-color: transparent;
+  width: 100%;
+  height: calc(100% - var(--output-height));
+  padding: var(--input-padding-size);
+  color: var(--input-color);
+  font-size: clamp(
+    var(--screen-min-font),
+    var(--input-font),
+    var(--screen-max-font)
+  );
+  resize: none;
+  overflow: hidden;
 }
 
 #input:focus {
-	outline: none;
+  outline: none;
 }
 
 #output {
-	background-color: transparent;
-	font-family: monospace, monospace;
-	color: var(--output-color);
-	width: 100%;
-	height: var(--output-height);
-	font-size: clamp(
-		var(--screen-min-font),
-		var(--output-font),
-		var(--screen-max-font)
-	);
-	overflow: hidden;
+  background-color: transparent;
+  font-family: monospace, monospace;
+  color: var(--output-color);
+  width: 100%;
+  height: var(--output-height);
+  font-size: clamp(
+    var(--screen-min-font),
+    var(--output-font),
+    var(--screen-max-font)
+  );
+  overflow: hidden;
 }
 
 .button {
-	width: 100%;
-	height: 100%;
-	background-color: var(--btn-color1);
-	border-radius: 10%;
-	text-align: center;
-	line-height: var(--button-size);
-	font-size: var(--button-font);
-	transition: var(--btn-click-time);
+  width: 100%;
+  height: 100%;
+  background-color: var(--btn-color1);
+  border-radius: 10%;
+  text-align: center;
+  line-height: var(--button-size);
+  font-size: var(--button-font);
+  transition: var(--btn-click-time);
 }
 
 .button.clicked {
-	transform: scale(0.92);
+  transform: scale(0.92);
 }
 
 .btn-color1 {
-	background-color: var(--btn-color1);
+  background-color: var(--btn-color1);
 }
 .btn-color2 {
-	background-color: var(--btn-color2);
+  background-color: var(--btn-color2);
 }
 .btn-color3 {
-	background-color: var(--btn-color3);
+  background-color: var(--btn-color3);
 }
 
 @media (hover: hover) {
-	.button:hover,
-	.button.clicked {
-		filter: brightness(var(--hover-brightness));
-	}
+  .button:hover,
+  .button.clicked {
+    filter: brightness(var(--hover-brightness));
+  }
 }
 
 @media screen and (max-width: 1000px) and (min-aspect-ratio: 16/9) {
-	:root {
-		--main-width: clamp(250px, 100vw, 1000px);
-		--main-height: clamp(250px, var(--viewport-height), 500px);
-		/* prettier-ignore */
-		--button-width: calc((var(--main-width) - 7 * var(--gap-size) - 2 * var(--padding-size)) / 8);
-		/* prettier-ignore */
-		--button-height: calc((var(--main-height) - 3 * var(--gap-size) - 2 * var(--padding-size)) / 4);
-	}
-	#main {
-		background-color: var(--main-color);
-		width: var(--main-width);
-		height: var(--main-height);
-		display: grid;
-		/* prettier-ignore */
-		grid-template-columns:
+  :root {
+    --main-width: clamp(250px, 100vw, 1000px);
+    --main-height: clamp(250px, var(--viewport-height), 500px);
+    /* prettier-ignore */
+    --button-width: calc((var(--main-width) - 7 * var(--gap-size) - 2 * var(--padding-size)) / 8);
+    /* prettier-ignore */
+    --button-height: calc((var(--main-height) - 3 * var(--gap-size) - 2 * var(--padding-size)) / 4);
+  }
+  #main {
+    background-color: var(--main-color);
+    width: var(--main-width);
+    height: var(--main-height);
+    display: grid;
+    /* prettier-ignore */
+    grid-template-columns:
       var(--padding-size)
       repeat(7, var(--button-width) var(--gap-size))
       var(--button-width)
       var(--padding-size);
-		/* prettier-ignore */
-		grid-template-rows:
+    /* prettier-ignore */
+    grid-template-rows:
       var(--padding-size)
       repeat(3, var(--button-height) var(--gap-size))
       var(--button-height)
       var(--padding-size);
-		grid-template-areas:
-			" . .     . .     . .     . .     . .       .       .       .       .         .       .       . "
-			" . b_1   . b_2   . b_3   . b_4   . screen  screen  screen  screen  screen    screen  screen  . "
-			" . .     . .     . .     . .     . screen  screen  screen  screen  screen    screen  screen  . "
-			" . b_5   . b_6   . b_7   . b_8   . screen  screen  screen  screen  screen    screen  screen  . "
-			" . .     . .     . .     . .     . screen  screen  screen  screen  screen    screen  screen  . "
-			" . b_9   . b_0   . point . equal . screen  screen  screen  screen  screen    screen  screen  . "
-			" . .     . .     . .     . .     . .       .       .       .       .         .       .       . "
-			" . clear . back  . open  . close . plus    .       minus   .       multiply  .       divide  . "
-			" . .     . .   . .       . .     . .       .       .       .       .         .       .       . ";
-	}
+    grid-template-areas:
+      " . .     . .     . .     . .     . .       .       .       .       .         .       .       . "
+      " . b_1   . b_2   . b_3   . b_4   . screen  screen  screen  screen  screen    screen  screen  . "
+      " . .     . .     . .     . .     . screen  screen  screen  screen  screen    screen  screen  . "
+      " . b_5   . b_6   . b_7   . b_8   . screen  screen  screen  screen  screen    screen  screen  . "
+      " . .     . .     . .     . .     . screen  screen  screen  screen  screen    screen  screen  . "
+      " . b_9   . b_0   . point . equal . screen  screen  screen  screen  screen    screen  screen  . "
+      " . .     . .     . .     . .     . .       .       .       .       .         .       .       . "
+      " . clear . back  . open  . close . plus    .       minus   .       multiply  .       divide  . "
+      " . .     . .   . .       . .     . .       .       .       .       .         .       .       . ";
+  }
 }
