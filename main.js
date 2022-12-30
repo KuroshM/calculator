@@ -1,19 +1,26 @@
 const getPropValue = (elem, prop) => {
   return getComputedStyle(elem).getPropertyValue(prop);
 };
+
 const getPropValueInt = (elem, prop) => {
   return parseInt(getPropValue(elem, prop));
 };
+
 const getPropValueFloat = (elem, prop) => {
   return parseFloat(getPropValue(elem, prop));
 };
 
 const root = document.documentElement;
+
 const body = document.getElementsByTagName("body")[0];
 const main = document.getElementById("main");
 const input = document.getElementById("input");
 const output = document.getElementById("output");
+
 const btnClickTime = getPropValueFloat(root, "--btn-click-time") * 1000;
+const mainWidth = getPropValueInt(input, "width");
+
+const keys = initKeys();
 
 let cursorPos = 0;
 let isFinalized = false;
@@ -66,8 +73,6 @@ const initKeys = () => {
   return keys;
 };
 
-const keys = initKeys();
-
 const isMobile = () => {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
     navigator.userAgent
@@ -84,7 +89,7 @@ const windowResized = () => {
   resizeInOutText();
 };
 
-const clickIt = keyIndex => {
+const clickIt = (keyIndex) => {
   keys[keyIndex].click();
 };
 
@@ -122,7 +127,7 @@ const checkIfActive = () => {
   input.focus();
 };
 
-const isMathSymbol = c => {
+const isMathSymbol = (c) => {
   return c == "+" || c == "-" || c == "\xD7" || c == "\xF7";
 };
 
@@ -166,7 +171,7 @@ const validateInput = () => {
   input.value = text;
 };
 
-const getCompletedExpr = expr => {
+const getCompletedExpr = (expr) => {
   if (expr[expr.length - 1] === ".") {
     expr = removeFromStr(expr, expr.length - 1);
   }
@@ -198,7 +203,7 @@ const deleteSelected = () => {
   }
 };
 
-const isExpr = expr => {
+const isExpr = (expr) => {
   return isNaN(expr) && isNaN(getCompletedExpr(expr));
 };
 
@@ -242,7 +247,7 @@ const clearBack = () => {
   checkInput();
 };
 
-const typeIt = c => {
+const typeIt = (c) => {
   if (isTextSelected()) {
     deleteSelected();
   } else {
@@ -289,11 +294,11 @@ const checkInput = () => {
   resizeInOutText();
 };
 
-const keyPressedEvent = e => {
+const keyPressedEvent = (e) => {
   e.preventDefault();
   const pressedKey = e.key;
   let keyFound = false;
-  keys.some(key => {
+  keys.some((key) => {
     if (key.keyboardKey.includes(pressedKey)) {
       key.click();
       keyFound = true;
@@ -358,8 +363,7 @@ const resizeOutputText = () => {
   root.style.setProperty("--output-font", `${getDesiredElementFont(output)}px`);
 };
 
-const mainWidth = getPropValueInt(input, "width");
-const getDesiredElementFont = elem => {
+const getDesiredElementFont = (elem) => {
   const textWidth = getTextWidth(
     elem.value || elem.innerText,
     getPropValue(elem, "font")

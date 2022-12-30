@@ -6,7 +6,7 @@
 }
 
 :root {
-  --viewport-height: 100vh;
+  --viewport-height: 90vh;
   --main-width: clamp(250px, 100vw, 500px);
   --main-height: clamp(250px, var(--viewport-height), 1000px);
   --screen-height: calc(0.3 * var(--main-height));
@@ -17,9 +17,9 @@
                         - var(--padding-size) * 2);
   --input-padding-size: 10px;
   --gap-size: 10px;
-  --padding-size: 10px;
+  --padding-size: 15px;
   --output-height: 35%;
-  --screen-max-font: 20vmin;
+  --screen-max-font: 15vmin;
   --screen-min-font: 5vmin;
   --btn-click-time: 0.05s;
 }
@@ -30,17 +30,17 @@
   --button-height: calc((var(--keyboard-height) - 4 * var(--gap-size)) / 5);
   --input-font: var(--screen-max-font);
   --output-font: var(--screen-max-font);
-  --button-font: calc(min(var(--button-width), var(--button-height)) / 2);
+  --button-font: calc(min(var(--button-width), var(--button-height)) / 1.7);
 }
 
 .light {
-  --main-color: rgb(72, 97, 145);
-  --scr-color: rgb(89, 178, 148);
-  --btn-color1: rgb(24, 171, 171);
-  --btn-color2: rgb(63, 145, 145);
-  --btn-color3: rgb(133, 184, 166);
-  --output-color: rgb(36, 34, 34);
-  --input-color: rgb(24, 23, 23);
+  --main-color: #d8d8d8;
+  --scr-color: #d3ffe4;
+  --btn-color1: #a4a4a4;
+  --btn-color2: #b5adff;
+  --btn-color3: #ff9494;
+  --output-color: #210064;
+  --input-color: #181717;
   --hover-brightness: 90%;
 }
 
@@ -51,9 +51,10 @@
 }
 
 .largeOutput {
-  --output-height: 60%;
-  --output-color: black;
-  --input-color: rgb(49, 49, 49);
+  --output-height: 55%;
+  --output-color: #5d1023;
+  --input-color: #6c6c6c;
+  text-align: center;
 }
 
 .noOutput {
